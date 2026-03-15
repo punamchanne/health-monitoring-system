@@ -35,18 +35,18 @@ const submitHealthData = async (req, res) => {
     if (alerts.length > 0) {
       await Alert.insertMany(alerts);
       
-      // Notify the Doctor via Email
+      // Notify the Caretaker via Email
       try {
-        const patientRecord = await Patient.findOne({ patientId }).populate('doctorId');
-        if (patientRecord && patientRecord.doctorId && patientRecord.doctorId.email) {
+        const patientRecord = await Patient.findOne({ patientId }).populate('caretakerId');
+        if (patientRecord && patientRecord.caretakerId && patientRecord.caretakerId.email) {
           const patientName = req.user.name;
           const subject = `🚨 URGENT: Health Alert for ${patientName}`;
-          const message = `Dr. ${patientRecord.doctorId.name},\n\nThis is an automated alert from Smart Health Monitoring System.\n\nYour patient, ${patientName}, has submitted critical health vitals that require your immediate attention:\n\n${alerts.map(a => `- ${a.message}`).join('\n')}\n\nPlease log in to your dashboard to review the full medical history.\n\nRegards,\nClinical Care Team`;
+          const message = `Hello ${patientRecord.caretakerId.name},\n\nThis is an automated alert from Smart Health Monitoring System.\n\nYour patient, ${patientName}, has submitted critical health vitals that require your immediate attention:\n\n${alerts.map(a => `- ${a.message}`).join('\n')}\n\nPlease log in to your dashboard to review the full medical history.\n\nRegards,\nClinical Care Team`;
           
-          await sendEmail(patientRecord.doctorId.email, subject, message);
+          await sendEmail(patientRecord.caretakerId.email, subject, message);
         }
       } catch (emailErr) {
-        console.error('Failed to send emergency email to doctor:', emailErr);
+        console.error('Failed to send emergency email to caretaker:', emailErr);
       }
     }
 
@@ -74,4 +74,13 @@ const getPrescriptions = async (req, res) => {
   }
 };
 
-module.exports = { submitHealthData, getHealthHistory, getPrescriptions };
+const getProfile = async (req, res) => {
+  try {
+    const profile = await Patient.findOne({ patientId: req.user.id });
+    res.json(profile);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { submitHealthData, getHealthHistory, getPrescriptions, getProfile };

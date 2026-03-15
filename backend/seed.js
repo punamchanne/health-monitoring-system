@@ -4,38 +4,38 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const seedDoctor = async () => {
+const seedCaretaker = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI);
         console.log('Connected to MongoDB');
 
-        const doctorEmail = 'doctor@health.com';
-        let doctor = await User.findOne({ email: doctorEmail });
+        const caretakerEmail = 'caretaker@health.com';
+        let caretaker = await User.findOne({ email: caretakerEmail });
 
-        if (doctor) {
-            console.log('Default doctor exists, ensuring approval status...');
-            doctor.isApproved = true;
-            await doctor.save();
-            console.log('Default doctor approval status updated/verified.');
+        if (caretaker) {
+            console.log('Default caretaker exists, ensuring approval status...');
+            caretaker.isApproved = true;
+            await caretaker.save();
+            console.log('Default caretaker approval status updated/verified.');
         } else {
-            doctor = new User({
-                name: 'Dr. John Smith',
-                email: doctorEmail,
+            caretaker = new User({
+                name: 'Samuel Hart',
+                email: caretakerEmail,
                 password: 'password123',
-                role: 'doctor',
+                role: 'caretaker',
                 isApproved: true
             });
-            await doctor.save();
-            console.log('Default doctor created successfully');
-            console.log('Email: doctor@health.com');
+            await caretaker.save();
+            console.log('Default caretaker created successfully');
+            console.log('Email: caretaker@health.com');
             console.log('Password: password123');
         }
         
         process.exit();
     } catch (error) {
-        console.error('Error seeding doctor:', error.message);
+        console.error('Error seeding caretaker:', error.message);
         process.exit(1);
     }
 };
 
-seedDoctor();
+seedCaretaker();

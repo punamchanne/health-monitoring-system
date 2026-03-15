@@ -94,18 +94,17 @@ const PatientDashboard = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await api.get('/doctor/patients');
-      const myData = response.data.find(p => p.patientId._id === user.id);
-      if (myData) {
+      const response = await api.get('/patient/profile');
+      if (response.data) {
         setProfile({
-            age: myData.age || '',
-            gender: myData.gender || '',
-            contact: myData.contact || '',
-            address: myData.address || '',
-            bloodGroup: myData.bloodGroup || '',
-            height: myData.height || '',
-            emergencyName: myData.emergencyName || '',
-            emergencyPhone: myData.emergencyPhone || ''
+            age: response.data.age || '',
+            gender: response.data.gender || '',
+            contact: response.data.contact || '',
+            address: response.data.address || '',
+            bloodGroup: response.data.bloodGroup || '',
+            height: response.data.height || '',
+            emergencyName: response.data.emergencyName || '',
+            emergencyPhone: response.data.emergencyPhone || ''
         });
       }
     } catch (err) {

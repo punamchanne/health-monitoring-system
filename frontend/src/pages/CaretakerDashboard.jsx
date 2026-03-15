@@ -14,7 +14,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const DoctorDashboard = () => {
+const CaretakerDashboard = () => {
   const [patients, setPatients] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [pendingUsers, setPendingUsers] = useState([]);
@@ -51,7 +51,7 @@ const DoctorDashboard = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await api.get('/doctor/dashboard-stats');
+      const response = await api.get('/caretaker/dashboard-stats');
       setStats(response.data);
     } catch (err) {
       console.error(err);
@@ -60,7 +60,7 @@ const DoctorDashboard = () => {
 
   const fetchPatients = async () => {
     try {
-      const response = await api.get('/doctor/patients');
+      const response = await api.get('/caretaker/patients');
       setPatients(response.data);
     } catch (err) {
       console.error(err);
@@ -69,7 +69,7 @@ const DoctorDashboard = () => {
 
   const fetchAlerts = async () => {
     try {
-      const response = await api.get('/doctor/alerts');
+      const response = await api.get('/caretaker/alerts');
       setAlerts(response.data);
     } catch (err) {
       console.error(err);
@@ -78,7 +78,7 @@ const DoctorDashboard = () => {
 
   const fetchPendingApprovals = async () => {
     try {
-      const response = await api.get('/doctor/pending-approvals');
+      const response = await api.get('/caretaker/pending-approvals');
       setPendingUsers(response.data);
     } catch (err) {
       console.error(err);
@@ -87,7 +87,7 @@ const DoctorDashboard = () => {
 
   const handleApprove = async (userId) => {
     try {
-      await api.post(`/doctor/approve-user/${userId}`);
+      await api.post(`/caretaker/approve-user/${userId}`);
       fetchPendingApprovals();
       fetchStats();
       alert('User approved successfully!');
@@ -101,8 +101,8 @@ const DoctorDashboard = () => {
     setDetailTab('history');
     try {
       const [dataRes, presRes] = await Promise.all([
-        api.get(`/doctor/patient-data/${patient.patientId._id}`),
-        api.get(`/doctor/patient-prescriptions/${patient.patientId._id}`)
+        api.get(`/caretaker/patient-data/${patient.patientId._id}`),
+        api.get(`/caretaker/patient-prescriptions/${patient.patientId._id}`)
       ]);
       setPatientData(dataRes.data);
       setPatientPrescriptions(presRes.data);
@@ -120,7 +120,7 @@ const DoctorDashboard = () => {
   const handleAddPatient = async (e) => {
     e.preventDefault();
     try {
-      await api.post('/doctor/add-patient', newPatient);
+      await api.post('/caretaker/add-patient', newPatient);
       setShowAddModal(false);
       fetchPatients();
       setNewPatient({ patientEmail: '', age: '', gender: '', contact: '' });
@@ -132,13 +132,12 @@ const DoctorDashboard = () => {
   const handlePrescribe = async (e) => {
     e.preventDefault();
     try {
-      await api.post('/doctor/prescribe', {
+      await api.post('/caretaker/prescribe', {
         ...newPrescription,
         patientId: selectedPatient.patientId._id
       });
       setShowPrescribeModal(false);
-      // Refresh prescriptions
-      const presRes = await api.get(`/doctor/patient-prescriptions/${selectedPatient.patientId._id}`);
+      const presRes = await api.get(`/caretaker/patient-prescriptions/${selectedPatient.patientId._id}`);
       setPatientPrescriptions(presRes.data);
       setNewPrescription({ medicineName: '', reminderTime: '', duration: '', dosage: '' });
       alert('Prescription added successfully!');
@@ -154,7 +153,6 @@ const DoctorDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row font-sans text-slate-900">
-      {/* Sidebar - Desktop Only */}
       <aside className="hidden md:flex flex-col w-[280px] bg-white border-r border-slate-100 p-8 sticky top-0 h-screen overflow-y-auto">
         <div className="flex items-center gap-3 mb-12 px-2">
           <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-200">
@@ -226,7 +224,7 @@ const DoctorDashboard = () => {
              </div>
              <div className="overflow-hidden">
                 <div className="text-sm font-black text-slate-800 truncate">{user?.name}</div>
-                <div className="text-[9px] font-black text-primary-600 uppercase tracking-tighter">Clinical Specialist</div>
+                <div className="text-[9px] font-black text-primary-600 uppercase tracking-tighter">Caretaker Account</div>
              </div>
           </div>
           <button 
@@ -239,13 +237,11 @@ const DoctorDashboard = () => {
         </div>
       </aside>
 
-      {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto max-h-screen bg-[#F8FAFC]">
-        {/* Navigation / Header */}
         <header className="bg-white/80 backdrop-blur-xl border-b border-slate-100 sticky top-0 z-50 px-8 py-4 flex items-center justify-between">
            <div>
               <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-0.5">Health Monitoring System</div>
-              <h2 className="text-xl font-black text-slate-900">Clinical Dashboard</h2>
+              <h2 className="text-xl font-black text-slate-900">Caretaker Dashboard</h2>
            </div>
            <div className="flex items-center gap-4">
               <div className="relative group hidden sm:block">
@@ -316,7 +312,6 @@ const DoctorDashboard = () => {
                 key="overview" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="max-w-7xl mx-auto"
               >
-                {/* Hero Stats */}
                 <div className="flex flex-col lg:flex-row gap-6 mb-12">
                    <div className="flex-1 bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm flex items-center gap-8 group hover:border-primary-200 transition-all overflow-hidden relative">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-primary-600/5 rounded-full translate-x-10 -translate-y-10 group-hover:scale-150 transition-transform duration-700" />
@@ -357,13 +352,12 @@ const DoctorDashboard = () => {
                 </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
-                   {/* Main Patient List Table */}
                    <div className="xl:col-span-2 space-y-8">
                      <div className="bg-white rounded-[3.5rem] border border-slate-100 shadow-sm overflow-hidden">
                         <div className="p-8 border-b border-slate-50 flex items-center justify-between">
                            <div>
                               <h3 className="text-2xl font-black text-slate-900">Assigned Patients</h3>
-                              <p className="text-slate-400 text-xs font-bold mt-1">Directly managed by your clinical team.</p>
+                              <p className="text-slate-400 text-xs font-bold mt-1">Directly managed by you.</p>
                            </div>
                            <button onClick={() => setShowAddModal(true)} className="flex items-center gap-2 bg-primary-600 text-white px-5 py-2.5 rounded-2xl font-bold text-sm shadow-lg shadow-primary-100 hover:scale-105 transition-all">
                               <UserPlus size={18} />
@@ -424,7 +418,6 @@ const DoctorDashboard = () => {
                      </div>
                    </div>
 
-                   {/* Secondary Analytics Sidebar */}
                    <div className="space-y-8">
                      <div className="bg-white rounded-[3rem] p-8 border border-slate-100 shadow-sm">
                         <div className="flex items-center justify-between mb-8">
@@ -451,14 +444,11 @@ const DoctorDashboard = () => {
                              ))
                            )}
                         </div>
-                        {alerts.length > 4 && (
-                          <button className="w-full mt-6 py-4 bg-slate-50 rounded-2xl text-[10px] font-black text-slate-400 uppercase tracking-widest hover:bg-slate-100 transition-colors">See all {alerts.length} Warnings</button>
-                        )}
                      </div>
 
                      <div className="bg-gradient-to-br from-indigo-600 to-primary-700 rounded-[3rem] p-8 text-white shadow-xl shadow-primary-200">
                         <Activity className="text-white/40 mb-6" size={40} />
-                        <h4 className="text-2xl font-black leading-tight mb-3">Clinician AI Support</h4>
+                        <h4 className="text-2xl font-black leading-tight mb-3">Caretaker AI Support</h4>
                         <p className="text-indigo-100 text-sm font-medium leading-relaxed mb-8">System is active and monitoring real-time bio-data streams. Abnormalities will flag immediately.</p>
                         <button className="w-full bg-white text-primary-600 py-3.5 rounded-2xl font-black text-sm hover:bg-indigo-50 transition-all">Support Center</button>
                      </div>
@@ -470,7 +460,6 @@ const DoctorDashboard = () => {
                  key="detail" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
                  className="max-w-7xl mx-auto"
               >
-                {/* Detail Header / Nav */}
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 gap-6">
                    <div className="flex items-center gap-6">
                       <button 
@@ -502,16 +491,11 @@ const DoctorDashboard = () => {
                          <Pill size={20} />
                          Generate Prescription
                       </button>
-                      <button className="w-12 h-12 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 hover:text-slate-900 transition-all shadow-sm">
-                         <MoreVertical size={24} />
-                      </button>
                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
-                   {/* Left Column - Main Details */}
                    <div className="lg:col-span-3 space-y-10">
-                      {/* Interactive Visualizer */}
                       <div className="bg-white rounded-[3.5rem] p-10 border border-slate-100 shadow-sm relative overflow-hidden group">
                          <div className="flex items-center justify-between mb-10 relative z-10">
                             <div>
@@ -598,24 +582,22 @@ const DoctorDashboard = () => {
                                            {p.status}
                                         </span>
                                         <div className="flex-1" />
-                                        <button className="text-red-400 hover:text-red-600 transition-colors"><Trash2 size={16} /></button>
                                      </div>
                                   </div>
                                </div>
                              ))}
                              {patientPrescriptions.length === 0 && (
-                               <div className="col-span-full py-20 text-center text-slate-400 font-bold italic border-2 border-dashed border-slate-100 rounded-[2rem]">No active prescriptions on file.</div>
+                               <div className="col-span-full py-20 text-center text-slate-400 font-bold italic border-2 border-dashed border-slate-100 rounded-[2rem]">No active prescriptions.</div>
                              )}
                            </div>
                          )}
                       </div>
                    </div>
 
-                   {/* Right Column - Profile Summary */}
                    <div className="space-y-8">
                       <div className="bg-white rounded-[3rem] p-8 border border-slate-100 shadow-sm space-y-8 overflow-hidden relative group">
                          <div className="absolute bottom-0 right-0 w-40 h-40 bg-indigo-600/5 rounded-full translate-x-20 translate-y-20 group-hover:scale-150 transition-transform duration-1000" />
-                         <h3 className="text-xl font-black text-slate-900 border-b border-slate-50 pb-4">Clinical File</h3>
+                         <h3 className="text-xl font-black text-slate-900 border-b border-slate-50 pb-4">Caretaker File</h3>
                          
                          <div className="space-y-6 relative z-10">
                             <div className="flex items-start gap-4">
@@ -637,16 +619,6 @@ const DoctorDashboard = () => {
                                   <div className="text-sm font-black text-slate-800">{selectedPatient.contact || "Not Configured"}</div>
                                </div>
                             </div>
-
-                            <div className="flex items-start gap-4">
-                               <div className="w-10 h-10 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600 shadow-inner">
-                                  <MapPin size={18} />
-                               </div>
-                               <div>
-                                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Home Residency</label>
-                                  <div className="text-sm font-black text-slate-800 leading-tight">{selectedPatient.address || "No address on file"}</div>
-                               </div>
-                            </div>
                          </div>
                       </div>
 
@@ -654,9 +626,7 @@ const DoctorDashboard = () => {
                          <div className="absolute top-0 right-0 p-4 opacity-5 translate-x-5 -translate-y-5 rotate-12 group-hover:rotate-0 group-hover:opacity-10 transition-all duration-700">
                             <AlertCircle size={100} />
                          </div>
-                         <h3 className="text-xl font-black text-red-500 mb-6 flex items-center gap-2">
-                             Emergency Line
-                         </h3>
+                         <h3 className="text-xl font-black text-red-500 mb-6 flex items-center gap-2">Emergency</h3>
                          <div className="space-y-6 relative z-10">
                             <div>
                                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Primary Contact</label>
@@ -667,12 +637,7 @@ const DoctorDashboard = () => {
                                <div className="text-xl font-black text-red-600 font-mono tracking-tighter">{selectedPatient.emergencyPhone || "NOT SET"}</div>
                             </div>
                          </div>
-                         <div className="mt-8 pt-6 border-t border-slate-50 italic text-[10px] font-black text-slate-400 uppercase leading-relaxed text-center tracking-tighter">Clinical Alert Priority: High</div>
                       </div>
-
-                      <button className="w-full bg-[#1A1F2D] text-white py-6 rounded-[2.5rem] font-black text-sm shadow-2xl shadow-slate-200 hover:bg-slate-800 active:scale-95 transition-all">
-                        Compile PDF Report
-                      </button>
                    </div>
                 </div>
               </motion.div>
@@ -687,10 +652,9 @@ const DoctorDashboard = () => {
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-10 overflow-y-auto bg-slate-900/40 backdrop-blur-xl">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowAddModal(false)} className="absolute inset-0" />
             <motion.div initial={{ scale: 0.9, opacity: 0, y: 30 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 30 }} className="relative w-full max-w-[550px] bg-white rounded-[3.5rem] p-12 shadow-2xl border border-slate-100">
-              <div className="absolute top-8 right-8 text-primary-600/10"><UserPlus size={100} /></div>
               <div className="mb-10 relative z-10">
                  <h2 className="text-4xl font-black text-slate-900 leading-none mb-3">Link Patient</h2>
-                 <p className="text-slate-500 font-bold">Register a new profile to your clinical database.</p>
+                 <p className="text-slate-500 font-bold">Register a new profile to your management.</p>
               </div>
               
               <form onSubmit={handleAddPatient} className="space-y-6 relative z-10">
@@ -712,15 +676,15 @@ const DoctorDashboard = () => {
                        />
                     </div>
                     <div className="space-y-1.5">
-                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Identity Gender</label>
+                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Gender</label>
                        <select 
                          className="w-full bg-[#F8FAFC] border-2 border-transparent focus:border-primary-600 focus:bg-white rounded-2xl py-4 px-6 outline-none font-bold text-slate-800 transition-all shadow-inner appearance-none cursor-pointer" 
                          value={newPatient.gender} onChange={(e) => setNewPatient({ ...newPatient, gender: e.target.value })}
                        >
                          <option value="">Select</option>
-                         <option value="Male">Male Profile</option>
-                         <option value="Female">Female Profile</option>
-                         <option value="Non-Binary">Non-Binary</option>
+                         <option value="Male">Male</option>
+                         <option value="Female">Female</option>
+                         <option value="Other">Other</option>
                        </select>
                     </div>
                 </div>
@@ -742,7 +706,6 @@ const DoctorDashboard = () => {
         )}
       </AnimatePresence>
 
-      {/* Prescription Modal */}
       <AnimatePresence>
         {showPrescribeModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-10 overflow-y-auto bg-slate-900/40 backdrop-blur-xl">
@@ -751,12 +714,12 @@ const DoctorDashboard = () => {
                <div className="mb-10 relative z-10">
                  <div className="inline-flex py-1.5 px-4 bg-primary-50 rounded-full text-[10px] font-black text-primary-600 uppercase tracking-[0.2em] mb-4 border border-primary-100">Medical Prescription (RX)</div>
                  <h2 className="text-4xl font-black text-slate-900 leading-none mb-2">Drafting Medication</h2>
-                 <p className="text-slate-500 font-bold italic">Configuring plan for: {selectedPatient?.patientId?.name}</p>
+                 <p className="text-slate-500 font-bold italic">Configuring for: {selectedPatient?.patientId?.name}</p>
               </div>
 
               <form onSubmit={handlePrescribe} className="space-y-6 relative z-10">
                 <div className="space-y-1.5">
-                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Medicine Nomenclature</label>
+                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Medicine Name</label>
                    <input 
                       type="text" required placeholder="e.g. Lipitor 20mg" 
                       className="w-full bg-[#F8FAFC] border-2 border-transparent focus:border-primary-600 focus:bg-white rounded-2xl py-4 px-6 outline-none font-black text-slate-800 transition-all shadow-inner" 
@@ -764,7 +727,7 @@ const DoctorDashboard = () => {
                    />
                 </div>
                 <div className="space-y-1.5">
-                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Specific Dosage Instruction</label>
+                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Dosage Instruction</label>
                    <input 
                       type="text" required placeholder="e.g. One tablet after breakfast" 
                       className="w-full bg-[#F8FAFC] border-2 border-transparent focus:border-primary-600 focus:bg-white rounded-2xl py-4 px-6 outline-none font-bold text-slate-800 transition-all shadow-inner" 
@@ -773,7 +736,7 @@ const DoctorDashboard = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-6">
                     <div className="space-y-1.5">
-                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Cron-Time (Daily)</label>
+                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Reminder Time</label>
                        <input 
                          type="time" required 
                          className="w-full bg-[#F8FAFC] border-2 border-transparent focus:border-primary-600 focus:bg-white rounded-2xl py-4 px-6 outline-none font-black text-slate-800 transition-all shadow-inner" 
@@ -781,7 +744,7 @@ const DoctorDashboard = () => {
                        />
                     </div>
                     <div className="space-y-1.5">
-                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Plan Duration</label>
+                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Duration</label>
                        <input 
                          type="text" required placeholder="e.g. 14 Days" 
                          className="w-full bg-[#F8FAFC] border-2 border-transparent focus:border-primary-600 focus:bg-white rounded-2xl py-4 px-6 outline-none font-bold text-slate-800 transition-all shadow-inner" 
@@ -802,4 +765,4 @@ const DoctorDashboard = () => {
   );
 };
 
-export default DoctorDashboard;
+export default CaretakerDashboard;

@@ -19,8 +19,8 @@ const Login = () => {
     setIsLoading(true);
     try {
       const user = await login(email, password);
-      if (user.role === 'doctor') {
-        navigate('/doctor-dashboard');
+      if (user.role === 'caretaker') {
+        navigate('/caretaker-dashboard');
       } else {
         navigate('/patient-dashboard');
       }

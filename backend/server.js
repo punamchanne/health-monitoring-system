@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
-const doctorRoutes = require('./routes/doctorRoutes');
+const caretakerRoutes = require('./routes/caretakerRoutes');
 const patientRoutes = require('./routes/patientRoutes');
 const initReminderCron = require('./scheduler/reminderCron');
 
@@ -17,7 +17,7 @@ app.use(cors());
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/doctor', doctorRoutes);
+app.use('/api/caretaker', caretakerRoutes);
 app.use('/api/patient', patientRoutes);
 
 // Database Connection

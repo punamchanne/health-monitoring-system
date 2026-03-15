@@ -6,7 +6,7 @@ const Alert = require('../models/Alert');
 
 const getPatients = async (req, res) => {
   try {
-    const patients = await Patient.find({ doctorId: req.user.id }).populate('patientId', 'name email');
+    const patients = await Patient.find({ caretakerId: req.user.id }).populate('patientId', 'name email');
     res.json(patients);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -19,11 +19,11 @@ const addPatient = async (req, res) => {
     const patientUser = await User.findOne({ email: patientEmail, role: 'patient' });
     if (!patientUser) return res.status(404).json({ message: 'Patient user not found' });
 
-    const existingPatient = await Patient.findOne({ doctorId: req.user.id, patientId: patientUser._id });
+    const existingPatient = await Patient.findOne({ caretakerId: req.user.id, patientId: patientUser._id });
     if (existingPatient) return res.status(400).json({ message: 'Patient already added' });
 
     const patient = await Patient.create({
-      doctorId: req.user.id,
+      caretakerId: req.user.id,
       patientId: patientUser._id,
       age,
       gender,
@@ -63,8 +63,8 @@ const prescribeMedicine = async (req, res) => {
 
 const getAlerts = async (req, res) => {
   try {
-    // Get alerts for all patients managed by this doctor
-    const patients = await Patient.find({ doctorId: req.user.id });
+    // Get alerts for all patients managed by this caretaker
+    const patients = await Patient.find({ caretakerId: req.user.id });
     const patientIds = patients.map(p => p.patientId);
     const alerts = await Alert.find({ patientId: { $in: patientIds } }).populate('patientId', 'name').sort({ createdAt: -1 });
     res.json(alerts);
@@ -75,7 +75,7 @@ const getAlerts = async (req, res) => {
 
 const getPendingApprovals = async (req, res) => {
   try {
-    // Only show pending PATIENTS to the doctor
+    // Only show pending PATIENTS to the caretaker
     const pendingUsers = await User.find({ isApproved: false, role: 'patient' }).select('-password');
     res.json(pendingUsers);
   } catch (error) {

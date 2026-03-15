@@ -114,8 +114,6 @@ const Register = () => {
                 </div>
               </div>
 
-              {/* Account type selection removed - Patient only registration */}
-
               <button
                 type="submit"
                 disabled={isLoading}

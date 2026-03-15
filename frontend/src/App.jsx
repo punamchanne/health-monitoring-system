@@ -3,7 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import DoctorDashboard from './pages/DoctorDashboard';
+import CaretakerDashboard from './pages/CaretakerDashboard';
 import PatientDashboard from './pages/PatientDashboard';
 import Navbar from './components/Navbar';
 
@@ -39,10 +39,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route 
-              path="/doctor-dashboard/*" 
+              path="/caretaker-dashboard/*" 
               element={
-                <ProtectedRoute role="doctor">
-                  <DoctorDashboard />
+                <ProtectedRoute role="caretaker">
+                  <CaretakerDashboard />
                 </ProtectedRoute>
               } 
             />

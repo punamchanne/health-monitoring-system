@@ -78,7 +78,7 @@ const Navbar = () => {
             ) : (
               <div className="flex items-center gap-4">
                 <Link 
-                  to={user.role === 'doctor' ? '/doctor-dashboard' : '/patient-dashboard'}
+                  to={user.role === 'caretaker' ? '/caretaker-dashboard' : '/patient-dashboard'}
                   className="flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-2 rounded-lg font-bold hover:bg-primary-100 transition-colors"
                 >
                   <UserIcon size={20} />
@@ -129,7 +129,7 @@ const Navbar = () => {
               ) : (
                 <div className="space-y-2">
                    <Link 
-                    to={user.role === 'doctor' ? '/doctor-dashboard' : '/patient-dashboard'}
+                    to={user.role === 'caretaker' ? '/caretaker-dashboard' : '/patient-dashboard'}
                     className="flex items-center justify-center gap-2 w-full py-3 bg-primary-600 text-white rounded-lg font-bold shadow-lg"
                     onClick={() => setIsMenuOpen(false)}
                   >

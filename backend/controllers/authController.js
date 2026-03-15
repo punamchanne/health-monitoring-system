@@ -24,7 +24,7 @@ const login = async (req, res) => {
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
     if (!user.isApproved) {
-      return res.status(403).json({ message: 'Your account is pending approval by a doctor.' });
+      return res.status(403).json({ message: 'Your account is pending approval by a caretaker.' });
     }
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });

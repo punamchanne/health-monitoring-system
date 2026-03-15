@@ -49,7 +49,7 @@ const LandingPage = () => {
                 Smartly & Easily
               </h1>
               <p className="text-xl text-slate-600 mb-10 max-w-xl leading-relaxed">
-                Connect with doctors, monitor your heartbeat, sugar levels, and temperature in real-time. Never miss a medicine with our smart reminder system.
+                Connect with caretakers, monitor your heartbeat, sugar levels, and temperature in real-time. Never miss a medicine with our smart reminder system.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                 <Link to="/register" className="btn-primary flex items-center gap-2 text-lg py-4 px-8 shadow-xl shadow-primary-200">
@@ -158,7 +158,7 @@ const LandingPage = () => {
             <FeatureCard 
               icon={MessageSquare} 
               title="Digital Consultation" 
-              description="A seamless bridge between patients and doctors with dedicated messaging and reporting panels."
+              description="A seamless bridge between patients and caretakers with dedicated messaging and reporting panels."
               delay={0.3}
               colorClass="bg-blue-50 text-blue-600"
             />
@@ -202,7 +202,7 @@ const LandingPage = () => {
               <div className="space-y-4">
                 {[
                   "Automated abnormal health alerts",
-                  "Direct connection with specialist doctors",
+                  "Direct connection with specialist caretakers",
                   "Encrypted and secure health records",
                   "Medicine dosage tracking with schedules"
                 ].map((text, i) => (
